@@ -6,35 +6,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white"
-    tools:context=".MainActivity">
-
-
-    <ImageView
-        android:id="@+id/iv_logoCasa"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        app:srcCompat="@drawable/logocasa"
-        android:layout_gravity="center"/>
-
+    tools:context=".SignUp">
     <TextView
-        android:id="@+id/tv_slogan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:text="@string/slogan" />
+        android:text="¡Inicia Sesión!"
+        android:textSize="40sp"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/et_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Correo"
+        android:inputType="textEmailAddress"/>
+    <EditText
+        android:id="@+id/et_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Contraseña"
+        android:inputType="textPassword"/>
 
     <Button
-        android:id="@+id/btn_iniciarSesion"
+        android:id="@+id/btn_inicioSesion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/iniciarSesion" />
-
-    <Button
-        android:id="@+id/btn_registrarse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/registrarse" />
-
+        android:text="@string/iniciarSesion"/>
 
 </LinearLayout>

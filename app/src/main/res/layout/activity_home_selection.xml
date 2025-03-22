@@ -6,35 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white"
-    tools:context=".MainActivity">
-
-
-    <ImageView
-        android:id="@+id/iv_logoCasa"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        app:srcCompat="@drawable/logocasa"
-        android:layout_gravity="center"/>
+    tools:context=".HomeSelection">
 
     <TextView
-        android:id="@+id/tv_slogan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:text="@string/slogan" />
+        android:text="Home selection"
+        android:textSize="40sp"
+        android:textAlignment="center" />
+    <Button
+        android:id="@+id/btn_crearHogar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Crear hogar"/>
 
     <Button
-        android:id="@+id/btn_iniciarSesion"
+        android:id="@+id/btn_unirseAHogar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/iniciarSesion" />
-
-    <Button
-        android:id="@+id/btn_registrarse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/registrarse" />
-
+        android:text="Unirse a un hogar"/>
 
 </LinearLayout>

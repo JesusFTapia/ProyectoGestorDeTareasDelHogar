@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ProyectoGestorDeTareasDomesticas</string>
+    <string name="iniciarSesion">Iniciar Sesión</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="slogan">Slogan(Tenemos que escoger uno)</string>
+
 </resources>
