@@ -3,5 +3,16 @@
     <string name="iniciarSesion">Iniciar Sesión</string>
     <string name="registrarse">Registrarse</string>
     <string name="slogan">Slogan(Tenemos que escoger uno)</string>
+    <string name="crearTarea">Crear Tarea</string>
+    <string name="crearHogar">Crear Hogar</string>
+    <string name="editarHogar">Editar Hogar</string>
+    <string name="editarTarea">Editar Tarea</string>
+    <string name="unirse">Unirse</string>
+    <string name="codigoHogar">Codigo del Hogar</string>"
+    <string name="nombre">Nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="fechaNacimiento">Fecha de Nacimiento</string>
+    <string name="correo">Correo</string>
+    <string name="contraseña">Contraseña</string>
 
 </resources>

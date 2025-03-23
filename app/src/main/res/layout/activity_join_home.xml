@@ -18,7 +18,7 @@
         android:id="@+id/et_codigo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Codigo del hogar"
+        android:hint="@string/codigoHogar"
         android:inputType="textPersonName"/>
 
 
@@ -26,7 +26,7 @@
         android:id="@+id/btn_unirse"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Unirse"/>
+        android:text="@string/unirse"/>
 
 
 </LinearLayout>

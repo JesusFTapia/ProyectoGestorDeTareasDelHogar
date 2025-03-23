@@ -18,7 +18,7 @@
         android:id="@+id/btn_crearHogar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Crear hogar"/>
+        android:text="@string/crearHogar"/>
 
     <Button
         android:id="@+id/btn_unirseAHogar"

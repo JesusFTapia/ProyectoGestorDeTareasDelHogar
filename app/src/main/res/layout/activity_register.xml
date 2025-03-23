@@ -15,41 +15,85 @@
         android:textSize="40sp"
         android:textAlignment="center" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nombres:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
     <EditText
         android:id="@+id/et_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nombre"
-        android:inputType="textPersonName"/>
+        android:hint="@string/nombre"
+        android:inputType="textPersonName"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Apellidos:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
     <EditText
         android:id="@+id/et_lastName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Apellido"
+        android:hint="@string/apellido "
         android:inputType="textPersonName"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fecha de nacimiento:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
     <EditText
         android:id="@+id/et_birthday"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Fecha de nacimiento"
-        android:inputType="date"/>
+        android:hint="@string/fechaNacimiento"
+        android:inputType="date"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Correo:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
     <EditText
         android:id="@+id/et_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Correo"
+        android:hint="@string/correo"
         android:inputType="textEmailAddress"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Contraseña:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
     <EditText
         android:id="@+id/et_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Contraseña"
+        android:hint="@string/contraseña"
         android:inputType="textPassword"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Confirmar contraseña:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
     <EditText
         android:id="@+id/et_confirmPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Confirmar contraseña"
+        android:hint="@string/contraseña"
         android:inputType="textPassword"/>
 
     <Button

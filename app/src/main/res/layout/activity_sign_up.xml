@@ -18,13 +18,13 @@
         android:id="@+id/et_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Correo"
+        android:hint="@string/correo"
         android:inputType="textEmailAddress"/>
     <EditText
         android:id="@+id/et_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Contraseña"
+        android:hint="@string/contraseña"
         android:inputType="textPassword"/>
 
     <Button

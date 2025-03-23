@@ -2,4 +2,33 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Limpieza General -->
+    <color name="verde_claro">#A7E9AF</color>
+    <color name="verde_menta">#C1E1C1</color>
+    <color name="azul_cielo">#B2EBF2</color>
+
+    <!-- Cocina -->
+    <color name="naranja_suave">#FFCC80</color>
+    <color name="amarillo_limon">#FFF59D</color>
+    <color name="marron_claro">#D7CCC8</color>
+
+    <!-- Lavandería -->
+    <color name="azul_claro">#90CAF9</color>
+    <color name="azul_marino">#64B5F6</color>
+
+    <!-- Organización -->
+    <color name="morado_claro">#CE93D8</color>
+    <color name="rosa_pastel">#F48FB1</color>
+
+    <!-- Tareas Especiales -->
+    <color name="rojo">#EF5350</color>
+    <color name="gris">#BDBDBD</color>
+
+    <!-- Tareas de Exterior -->
+    <color name="verde_oscuro">#4CAF50</color>
+
+    <!-- Colores básicos -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
 </resources>
