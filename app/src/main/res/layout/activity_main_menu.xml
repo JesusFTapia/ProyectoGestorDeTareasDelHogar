@@ -26,22 +26,24 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tareas"
-            android:fontFamily="sans-serif-light"
-            android:textAllCaps="true"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-light"
+            android:text="Tareas"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/black"
-            android:textColor="@color/black"
             android:layout_marginHorizontal="15dp"
-            android:layout_marginTop="33dp"/>
+            android:layout_marginTop="33dp"
+            android:background="@color/black"
+            android:textColor="@color/black" />
     </LinearLayout>
+
     <GridView
         android:id="@+id/movies_catalogo"
         android:layout_width="match_parent"
@@ -49,15 +51,14 @@
         android:numColumns="1"
         android:layout_marginTop="18dp"
         android:paddingHorizontal="6dp"/>
+
     <Button
         android:id="@+id/btn_anadirTareas"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:gravity="center"
         android:layout_gravity="right"
-        android:text="+"
-        />
-
+        android:gravity="center"
+        android:text="+" />
 
 
 </LinearLayout>
