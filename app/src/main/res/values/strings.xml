@@ -2,7 +2,7 @@
     <string name="app_name">ProyectoGestorDeTareasDomesticas</string>
     <string name="iniciarSesion">Iniciar Sesión</string>
     <string name="registrarse">Registrarse</string>
-    <string name="slogan">Slogan(Tenemos que escoger uno)</string>
+    <string name="slogan"> Tareas Sencillas </string>
     <string name="crearTarea">Crear Tarea</string>
     <string name="crearHogar">Crear Hogar</string>
     <string name="editarHogar">Editar Hogar</string>
