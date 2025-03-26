@@ -12,23 +12,182 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/crearTarea"
-        android:textSize="40sp"
-        android:layout_margin="30dp"
+        android:text="Crear Nueva Tarea"
+        android:textSize="36sp"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textAlignment="center"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="24dp"/>
 
-        />
+    <TextView
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nombre de la tarea"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:layout_marginLeft="20dp"
+        android:id="@+id/et_nombreTarea"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:hint="Escribe el nombre de la tarea"
+        android:textSize="18sp"
+        android:background="@android:drawable/edit_text"
+        android:layout_marginBottom="16dp"
+        android:padding="10dp"/>
+
+    <TextView
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Descripción breve"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:layout_marginLeft="20dp"
+        android:id="@+id/et_descripcionTarea"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:hint="Describe brevemente la tarea"
+        android:textSize="18sp"
+        android:background="@android:drawable/edit_text"
+        android:layout_marginBottom="16dp"
+        android:padding="10dp"/>
+
+    <TextView
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Día de la semana"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="16dp">
+
+        <RadioGroup
+            android:id="@+id/rg_diasSemana1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_lunes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lun"
+                android:textSize="16sp"
+                android:layout_marginRight="8dp"/>
+
+            <RadioButton
+                android:id="@+id/rb_martes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mar"
+                android:textSize="16sp"
+                android:layout_marginRight="8dp"/>
+
+            <RadioButton
+                android:id="@+id/rb_miercoles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mié"
+                android:textSize="16sp"
+                android:layout_marginRight="8dp"/>
+
+            <RadioButton
+                android:id="@+id/rb_jueves"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jue"
+                android:textSize="16sp"
+                android:layout_marginRight="8dp"/>
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/rg_diasSemana2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <RadioButton
+                android:id="@+id/rb_viernes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vie"
+                android:textSize="16sp"
+                android:layout_marginRight="8dp"/>
+
+            <RadioButton
+                android:id="@+id/rb_sabado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sáb"
+                android:textSize="16sp"
+                android:layout_marginRight="8dp"/>
+
+            <RadioButton
+                android:id="@+id/rb_domingo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dom"
+                android:textSize="16sp"
+                android:layout_marginRight="8dp"/>
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Miembros asignados"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="8dp"/>
+
+    <GridView
+        android:id="@+id/task_list"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:numColumns="1"
+        android:layout_marginTop="18dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp" />
+
     <Button
         android:id="@+id/btn_crearTarea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/crearTarea"
-        android:layout_marginTop="240dp"
-        android:textSize="30dp"
+        android:text="Crear Tarea"
+        android:textSize="20sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        />
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@android:color/white"/>
+
+    <!-- Nota final -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Puedes editarla después"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginBottom="8dp"/>
 
 </LinearLayout>

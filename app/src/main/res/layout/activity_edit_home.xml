@@ -9,24 +9,98 @@
     android:background="@color/colorBackground"
     tools:context=".EditHome">
     <TextView
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/editarHogar"
-        android:textSize="40sp"
-        android:layout_margin="30dp"
+        android:text="Editar Hogar"
+        android:textSize="36sp"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textAlignment="center"
-        />
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nombre del hogar"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:layout_marginLeft="20dp"
+        android:id="@+id/et_nombreHogarEditar"
+        android:text="Nombre del hogar"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:hint="Escribe el nombre del hogar"
+        android:textSize="18sp"
+        android:background="@android:drawable/edit_text"
+        android:layout_marginBottom="16dp"
+        android:padding="10dp"/>
+
+    <TextView
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Permisos de edición"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="8dp"/>
+
+    <RadioGroup
+        android:layout_marginLeft="20dp"
+        android:id="@+id/rg_permisosEdicionEditar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <RadioButton
+            android:id="@+id/rb_editarTodos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Todos"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/rb_editarSoloCreador"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Solo creador"
+            android:textSize="18sp" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Notificaciones de tareas"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="8dp"/>
+
+    <Switch
+        android:layout_marginLeft="20dp"
+        android:id="@+id/switch_notificacionesEditar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Activar notificaciones"
+        android:textSize="18sp"
+        android:layout_marginBottom="24dp"/>
+
     <Button
         android:id="@+id/btn_editarHogar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/editarHogar"
-        android:layout_marginTop="240dp"
-        android:textSize="30dp"
+        android:text="Guardar configuraciones"
+        android:textSize="20sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        />
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@android:color/white"/>
 
 </LinearLayout>
