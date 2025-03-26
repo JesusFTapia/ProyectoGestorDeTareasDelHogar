@@ -15,6 +15,8 @@
         android:layout_width="250dp"
         android:layout_height="250dp"
         app:srcCompat="@drawable/logocasa"
+        android:layout_marginBottom="19dp"
+        android:layout_margin="40dp"
         android:layout_gravity="center"/>
 
     <TextView
@@ -22,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
+        android:layout_marginBottom="40dp"
         android:text="@string/slogan" />
 
     <Button
@@ -29,13 +32,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/radius"
-        android:text="@string/iniciarSesion" />
+        android:layout_marginBottom="19dp"
+        android:text="@string/iniciarSesion"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        />
 
     <Button
         android:id="@+id/btn_registrarse"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/registrarse" />
+        android:text="@string/registrarse"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        />
 
 
 </LinearLayout>
