@@ -1,8 +1,10 @@
 package mx.edu.itson.potros.proyectogestordetareasdomesticas
 
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -22,6 +24,16 @@ class TaskInfo : AppCompatActivity() {
             tv_taskmembers.setText(bundle.getString("miembros"))
             tv_taskstate.setText(bundle.getString("estado"))
         }
+
+        val btnCompletar = findViewById<Button>(R.id.btn_completarTarea)
+        btnCompletar.setOnClickListener {
+            tv_taskstate.text = "Completada"
+            Toast.makeText(this, "¡Tarea marcada como completada!", Toast.LENGTH_SHORT).show()
+
+            // Aquí deberías actualizar Firebase
+        }
+
+
 
     }
 }
