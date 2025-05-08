@@ -1,111 +1,129 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorBackground"
-    tools:context=".TaskInfo">
-
-    <Button
-        android:layout_marginTop="40dp"
-        android:id="@+id/btn_configurarTarea"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:gravity="center"
-        android:layout_gravity="right"
-        android:scaleType="centerInside"/>
+    android:background="@color/colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="24dp">
 
+
+
+        <!-- Icono -->
         <ImageView
-
             android:id="@+id/iv_imagen"
-            android:layout_width="113dp"
-            android:layout_height="113dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center"
-            android:scaleType="fitXY"
-            android:src="@drawable/logocasa"
-            android:layout_marginTop="100dp"/>
+            android:src="@drawable/logotask"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Nombre -->
         <TextView
             android:id="@+id/tv_task"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Task:"
             android:textStyle="bold"
-            android:textSize="30sp"
-            android:layout_gravity="center"
-            android:fontFamily="sans-serif-light"
             android:textColor="@color/colorPrimaryDark"
-            />
+            android:textSize="22sp" />
+
         <TextView
             android:id="@+id/tv_taskname"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TaskName"
-            android:textSize="20sp"
-            android:layout_gravity="center"
-            android:fontFamily="sans-serif-light"
             android:textColor="@color/colorPrimaryDark"
-            />
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Miembros -->
         <TextView
             android:id="@+id/tv_members"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Miembros:"
             android:textStyle="bold"
-            android:textSize="30sp"
-            android:layout_gravity="center"
-            android:fontFamily="sans-serif-light"
             android:textColor="@color/colorPrimaryDark"
-            />
+            android:textSize="22sp" />
+
         <TextView
             android:id="@+id/tv_taskmembers"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Task"
-            android:textSize="20sp"
-            android:layout_gravity="center"
-            android:fontFamily="sans-serif-light"
             android:textColor="@color/colorPrimaryDark"
-            />
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Estado -->
         <TextView
             android:id="@+id/tv_state"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Estado:"
             android:textStyle="bold"
-            android:textSize="30sp"
-            android:layout_gravity="center"
-            android:fontFamily="sans-serif-light"
             android:textColor="@color/colorPrimaryDark"
-            />
+            android:textSize="22sp" />
+
         <TextView
             android:id="@+id/tv_taskstate"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Pendiente"
-            android:textSize="20sp"
-            android:layout_gravity="center"
-            android:fontFamily="sans-serif-light"
             android:textColor="@color/colorPrimaryDark"
-            />
+            android:textSize="18sp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Botones de acción -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/btn_completarTarea"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Marcar como completada"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btn_editarMiembros"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Editar miembros"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+        <!-- Eliminar -->
         <Button
-            android:id="@+id/btn_completarTarea"
+            android:id="@+id/btn_eliminarTarea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Eliminar tarea"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btn_volver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Marcar como completada"
+            android:text="Volver"
+            android:textSize="14sp"
+            android:layout_marginTop="30dp"
             android:layout_gravity="center"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@android:color/darker_gray"
             android:textColor="@android:color/white"/>
 
-
     </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "460489613226",
+    "project_id": "tareashogar-adb71",
+    "storage_bucket": "tareashogar-adb71.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460489613226:android:bcbf5b32ddc01c2b45d5d3",
+        "android_client_info": {
+          "package_name": "mx.edu.itson.potros.proyectogestordetareasdomesticas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJVbC3l4dAUNwZr6h58ZddF8uIxfRVKjQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

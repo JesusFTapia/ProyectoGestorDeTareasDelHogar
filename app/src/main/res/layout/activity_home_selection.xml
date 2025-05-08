@@ -19,15 +19,26 @@
         android:textStyle="bold"
         android:textAlignment="center"
         />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selecciona una opción"
+        android:textSize="26sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:gravity="center"
+        />
     <Button
         android:id="@+id/btn_crearHogar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/crearHogar"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="120dp"
         android:textSize="30dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@android:color/white"
         />
 
     <Button
@@ -38,6 +49,8 @@
         android:layout_marginTop="24dp"
         android:textSize="30dp"
         android:layout_marginLeft="40dp"
+        android:textColor="@color/colorPrimary"
+        android:backgroundTint="@android:color/white"
         android:layout_marginRight="40dp"
         />
 

@@ -9,86 +9,152 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.GridView
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
+
 
 class MainMenu : AppCompatActivity() {
-    var adapter: TaskAdapter? = null
     var tasks=ArrayList<Task>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_menu)
-        val btn_configurarHogar : Button = findViewById(R.id.btn_configurarHogar)
+        val btn_configurarHogar : ImageButton = findViewById(R.id.btn_configurarHogar)
         val btn_anadirTareas : Button = findViewById(R.id.btn_anadirTareas)
+        if (!Sesion.esCreador) {
+            btn_anadirTareas.isEnabled = false
+            btn_anadirTareas.alpha = 0.5f
+        }
+
+        if (!Sesion.puedeEditar) {
+            btn_configurarHogar.isEnabled = false
+            btn_configurarHogar.alpha = 0.5f
+        }
+
+
 
         cargarTasks()
-        adapter=TaskAdapter(this,tasks)
-        var gridTask: GridView = findViewById(R.id.task_list)
+        cargarProgresoSemanal()
+        val recyclerView = findViewById<RecyclerView>(R.id.task_list)
 
-        gridTask.adapter=adapter
 
         btn_configurarHogar.setOnClickListener {
             var intent: Intent = Intent(this, EditHome::class.java)
             startActivity(intent)
         }
         btn_anadirTareas.setOnClickListener {
-            var intent: Intent = Intent(this, CreateTask::class.java)
+            if (!Sesion.esCreador) {
+                Toast.makeText(this, "Solo el creador del hogar puede agregar tareas", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val intent = Intent(this, CreateTask::class.java)
             startActivity(intent)
         }
 
+
+        val btnCerrarSesion = findViewById<Button>(R.id.btn_cerrarSesion)
+
+        btnCerrarSesion.setOnClickListener {
+            // 1. Cerrar sesión de Firebase
+            FirebaseAuth.getInstance().signOut()
+
+            // 2. Limpiar la sesión
+            Sesion.usuarioActual = ""
+            Sesion.uid = ""
+            Sesion.hogarId = ""
+            Sesion.puedeEditar = false
+            Sesion.esCreador = false
+
+            // 3. Regresar al inicio
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
+
+
     }
     fun cargarTasks() {
-        tasks.add(Task("Lavar los platos", "Juan, María", "Pendiente"))
-        tasks.add(Task("Hacer la compra", "Carlos, Ana", "En progreso"))
-        tasks.add(Task("Preparar informe", "Luis, Sofía", "Completado"))
-        tasks.add(Task("Regar las plantas", "Pedro", "Pendiente"))
-        tasks.add(Task("Organizar archivos", "Elena, Daniel", "En progreso"))
-        tasks.add(Task("Limpieza general", "Roberto, Claudia", "Completado"))
-    }
-}
-class TaskAdapter: BaseAdapter {
-    var tasks = ArrayList<Task>()
-    var context: Context? = null
+        val db = Firebase.firestore
+        val tareasRef = db.collection("hogares").document(Sesion.hogarId).collection("tareas")
 
-    constructor(context: Context, tasks: ArrayList<Task>) : super() {
-        this.tasks = tasks
-        this.context = context
-    }
+        tareasRef.get().addOnSuccessListener { result ->
+            val tareasAgrupadas = mutableMapOf<String, MutableList<Task>>()
 
-    override fun getCount(): Int {
-        return tasks.size
-    }
+            for (document in result) {
+                val nombre = document.getString("nombre") ?: "Sin nombre"
+                val estado = document.getString("estado") ?: "Desconocido"
+                val dia = document.getString("dia") ?: "Sin día"
+                val miembrosList = document.get("miembros") as? List<String> ?: listOf()
+                val miembrosStr = miembrosList.joinToString(", ")
 
-    override fun getItem(p0: Int): Any {
-        return tasks[p0]
-    }
+                val tarea = Task(
+                    id = document.id,
+                    nombre = nombre,
+                    miembros = miembrosStr,
+                    estado = estado
+                )
 
-    override fun getItemId(p0: Int): Long {
-        return p0.toLong()
-    }
-    override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-        var task = tasks[p0]
-        var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        var vista = inflator.inflate(R.layout.task, null)
-        var taskname: TextView = vista.findViewById(R.id.tv_taskname)
-        //var taskmembers: TextView = vista.findViewById(R.id.tv_taskmembers)
-        //var taskstate: TextView = vista.findViewById(R.id.tv_taskstate)
+                if (!tareasAgrupadas.containsKey(dia)) {
+                    tareasAgrupadas[dia] = mutableListOf()
+                }
+                tareasAgrupadas[dia]?.add(tarea)
+            }
 
-        taskname.setText(task.nombre)
-        //taskmembers.setText(task.miembros)
-        //taskstate.setText(task.estado)
-
-        vista.setOnClickListener() {
-            val intento = Intent(context, TaskInfo::class.java)
-            intento.putExtra("nombre", task.nombre)
-            intento.putExtra("miembros", task.miembros)
-            intento.putExtra("estado", task.estado)
-            context!!.startActivity(intento)
+            // Asignar adaptador agrupado
+            val recyclerView = findViewById<RecyclerView>(R.id.task_list)
+            recyclerView.adapter = GroupedTaskAdapter(this, tareasAgrupadas)
+        }.addOnFailureListener {
+            Toast.makeText(this, "Error al cargar tareas", Toast.LENGTH_SHORT).show()
         }
-        return vista
     }
+
+    fun cargarProgresoSemanal() {
+        val tvProgreso = findViewById<TextView>(R.id.tv_progreso)
+        val barraProgreso = findViewById<ProgressBar>(R.id.progresoTareas)
+
+        val db = Firebase.firestore
+        db.collection("hogares")
+            .document(Sesion.hogarId)
+            .collection("tareas")
+            .get()
+            .addOnSuccessListener { result ->
+                val total = result.size()
+                val completadas = result.count {
+                    it.getString("estado")?.lowercase() == "completada"
+                }
+
+                if (total > 0) {
+                    val porcentaje = (completadas * 100) / total
+                    tvProgreso.text = "✅ $completadas de $total tareas completadas"
+                    barraProgreso.progress = porcentaje
+                } else {
+                    tvProgreso.text = "No hay tareas registradas"
+                    barraProgreso.progress = 0
+                }
+            }
+    }
+
+
+
+    fun actualizarProgreso() {
+        val total = tasks.size
+        val completadas = tasks.count { it.estado == "Completado" }
+
+        val progreso = if (total > 0) completadas * 100 / total else 0
+
+        findViewById<ProgressBar>(R.id.progresoTareas).progress = progreso
+        findViewById<TextView>(R.id.tv_progreso).text = "Progreso: $progreso%"
+    }
+
 }

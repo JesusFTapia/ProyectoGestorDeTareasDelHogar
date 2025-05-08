@@ -12,7 +12,9 @@
     <string name="nombre">Nombre</string>
     <string name="apellido">Apellido</string>
     <string name="fechaNacimiento">Fecha de Nacimiento</string>
+    <string name="fechaNacimientoHint">dd/MM/yyyy</string>
     <string name="correo">Correo</string>
     <string name="contraseña">Contraseña</string>
+    <string name="salir">Salir</string>
 
 </resources>

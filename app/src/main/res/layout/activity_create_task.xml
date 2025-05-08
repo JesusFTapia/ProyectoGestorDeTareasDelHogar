@@ -158,27 +158,52 @@
         android:textColor="@color/black"
         android:layout_marginBottom="8dp"/>
 
-    <GridView
-        android:id="@+id/task_list"
+    <ListView
+        android:id="@+id/lista_miembros"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:numColumns="1"
-        android:layout_marginTop="18dp"
-        android:paddingLeft="6dp"
-        android:paddingRight="6dp" />
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:choiceMode="multipleChoice"/>
 
-    <Button
-        android:id="@+id/btn_crearTarea"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Crear Tarea"
-        android:textSize="20sp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="24dp"
+        android:orientation="horizontal"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:textColor="@android:color/white"/>
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btn_volver"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Volver"
+            android:backgroundTint="@android:color/darker_gray"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_crearTarea"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Crear Tarea"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
 
     <!-- Nota final -->
     <TextView

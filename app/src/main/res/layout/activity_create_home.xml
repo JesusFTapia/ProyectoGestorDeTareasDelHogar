@@ -90,18 +90,41 @@
         android:textSize="18sp"
         android:layout_marginBottom="24dp"/>
 
-    <Button
-        android:id="@+id/btn_creaHogar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Crear hogar"
-        android:textSize="20sp"
+        android:orientation="horizontal"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="24dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:textColor="@android:color/white"/>
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btn_volver"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Volver"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/darker_gray"
+            android:textSize="16sp" />
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_creaHogar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Crear hogar"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/colorPrimary"
+            android:textSize="16sp" />
+    </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

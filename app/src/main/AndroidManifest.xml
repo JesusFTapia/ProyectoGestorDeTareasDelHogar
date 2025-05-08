@@ -37,7 +37,7 @@
             android:name=".Register"
             android:exported="false" />
         <activity
-            android:name=".SignUp"
+            android:name=".SignIn"
             android:exported="false" />
         <activity
             android:name=".HomeSelection"

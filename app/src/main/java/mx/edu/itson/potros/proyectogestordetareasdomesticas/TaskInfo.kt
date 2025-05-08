@@ -1,39 +1,140 @@
 package mx.edu.itson.potros.proyectogestordetareasdomesticas
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class TaskInfo : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_info)
+
         val tv_taskname: TextView = findViewById(R.id.tv_taskname)
-        val tv_taskmembers: TextView =findViewById(R.id.tv_taskmembers)
-        val tv_taskstate: TextView =findViewById(R.id.tv_taskstate)
+        val tv_taskmembers: TextView = findViewById(R.id.tv_taskmembers)
+        val tv_taskstate: TextView = findViewById(R.id.tv_taskstate)
 
-        val bundle=intent.extras
-        if(bundle!=null){
-            tv_taskname.setText(bundle.getString("nombre"))
-            tv_taskmembers.setText(bundle.getString("miembros"))
-            tv_taskstate.setText(bundle.getString("estado"))
+        val btnCompletar: Button = findViewById(R.id.btn_completarTarea)
+        val btnEditarMiembros: Button = findViewById(R.id.btn_editarMiembros)
+        val btnEliminar: Button = findViewById(R.id.btn_eliminarTarea)
+        val btnVolver: Button = findViewById(R.id.btn_volver)
+
+        val taskId = intent.getStringExtra("id") ?: ""
+        val db = Firebase.firestore
+
+        // Mostrar nombre, miembros y estado
+        val bundle = intent.extras
+        if (bundle != null) {
+            tv_taskname.text = bundle.getString("nombre")
+            tv_taskmembers.text = bundle.getString("miembros")
+            tv_taskstate.text = bundle.getString("estado")
         }
 
-        val btnCompletar = findViewById<Button>(R.id.btn_completarTarea)
-        btnCompletar.setOnClickListener {
-            tv_taskstate.text = "Completada"
-            Toast.makeText(this, "¡Tarea marcada como completada!", Toast.LENGTH_SHORT).show()
+        // Obtener datos del hogar y de la tarea
+        db.collection("hogares").document(Sesion.hogarId).get()
+            .addOnSuccessListener { hogarDoc ->
+                val creador = hogarDoc.getString("creador") ?: ""
 
-            // Aquí deberías actualizar Firebase
+                db.collection("hogares")
+                    .document(Sesion.hogarId)
+                    .collection("tareas")
+                    .document(taskId)
+                    .get()
+                    .addOnSuccessListener { document ->
+                        if (document.exists()) {
+                            val miembros = document.get("miembros") as? List<*> ?: emptyList<String>()
+                            val puedeCompletar = miembros.contains(Sesion.uid) || Sesion.uid == creador
+                            val esCreador = Sesion.uid == creador
+
+                            // Validar completado
+                            btnCompletar.isEnabled = puedeCompletar
+                            if (puedeCompletar) {
+                                btnCompletar.setOnClickListener {
+                                    tv_taskstate.text = "Completada"
+                                    db.collection("hogares")
+                                        .document(Sesion.hogarId)
+                                        .collection("tareas")
+                                        .document(taskId)
+                                        .update("estado", "completada")
+                                        .addOnSuccessListener {
+                                            Toast.makeText(this, "Tarea completada", Toast.LENGTH_SHORT).show()
+                                        }
+                                        .addOnFailureListener {
+                                            Toast.makeText(this, "Error al actualizar Firebase", Toast.LENGTH_SHORT).show()
+                                        }
+                                }
+                            } else {
+                                Toast.makeText(this, "No tienes permiso para completar esta tarea", Toast.LENGTH_SHORT).show()
+                            }
+
+                            // Validar edición
+                            if (esCreador) {
+                                btnEditarMiembros.setOnClickListener {
+                                    db.collection("hogares")
+                                        .document(Sesion.hogarId)
+                                        .get()
+                                        .addOnSuccessListener { hogarDoc ->
+                                            val mapaMiembros = hogarDoc.get("miembros") as? Map<*, *> ?: emptyMap<String, Boolean>()
+                                            val miembrosUid = mapaMiembros.keys.map { it.toString() }
+
+                                            val seleccionados = mutableListOf<String>()
+                                            val nombres = miembrosUid.toTypedArray()
+
+                                            AlertDialog.Builder(this)
+                                                .setTitle("Selecciona los miembros")
+                                                .setMultiChoiceItems(nombres, null) { _, which, isChecked ->
+                                                    if (isChecked) seleccionados.add(nombres[which])
+                                                    else seleccionados.remove(nombres[which])
+                                                }
+                                                .setPositiveButton("Guardar") { _, _ ->
+                                                    db.collection("hogares")
+                                                        .document(Sesion.hogarId)
+                                                        .collection("tareas")
+                                                        .document(taskId)
+                                                        .update("miembros", seleccionados)
+                                                        .addOnSuccessListener {
+                                                            Toast.makeText(this, "Miembros actualizados", Toast.LENGTH_SHORT).show()
+                                                            finish()
+                                                        }
+                                                }
+                                                .setNegativeButton("Cancelar", null)
+                                                .show()
+                                        }
+                                }
+
+                                btnEliminar.setOnClickListener {
+                                    AlertDialog.Builder(this)
+                                        .setTitle("¿Eliminar tarea?")
+                                        .setMessage("Esta acción no se puede deshacer.")
+                                        .setPositiveButton("Sí") { _, _ ->
+                                            db.collection("hogares")
+                                                .document(Sesion.hogarId)
+                                                .collection("tareas")
+                                                .document(taskId)
+                                                .delete()
+                                                .addOnSuccessListener {
+                                                    Toast.makeText(this, "Tarea eliminada", Toast.LENGTH_SHORT).show()
+                                                    finish()
+                                                }
+                                        }
+                                        .setNegativeButton("Cancelar", null)
+                                        .show()
+                                }
+
+                            } else {
+                                btnEditarMiembros.isEnabled = false
+                                btnEliminar.isEnabled = false
+                            }
+                        }
+                    }
+            }
+
+        // Botón de volver
+        btnVolver.setOnClickListener {
+            finish()
         }
-
-
-
     }
 }
