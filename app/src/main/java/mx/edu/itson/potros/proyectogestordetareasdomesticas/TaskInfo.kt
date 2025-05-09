@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -18,6 +19,7 @@ class TaskInfo : AppCompatActivity() {
         val tv_taskmembers: TextView = findViewById(R.id.tv_taskmembers)
         val tv_taskstate: TextView = findViewById(R.id.tv_taskstate)
 
+        val btnAsignaMiembro = findViewById<Button>(R.id.asignarMiembroa)
         val btnCompletar: Button = findViewById(R.id.btn_completarTarea)
         val btnEditarTarea: Button = findViewById(R.id.btn_editarTarea)
         val btnEliminar: Button = findViewById(R.id.btn_eliminarTarea)
@@ -98,6 +100,7 @@ class TaskInfo : AppCompatActivity() {
                                 et_taskname.setEnabled(true)
                                 btnEditarTarea.visibility= View.VISIBLE
                                 btnEliminar.visibility= View.VISIBLE
+                                btnAsignaMiembro.visibility = View.VISIBLE
 
                                 btnEditarTarea.setOnClickListener {
                                     db.collection("hogares")
@@ -112,6 +115,9 @@ class TaskInfo : AppCompatActivity() {
                                         )
                                         .addOnSuccessListener {
                                                 Toast.makeText(this, "Tarea actualizada", Toast.LENGTH_SHORT).show()
+                                            val intent = Intent(this, MainMenu::class.java)
+                                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Esto asegura que la actividad principal se refresque
+                                            startActivity(intent)
                                         }
                                         .addOnFailureListener {
                                             Toast.makeText(this, "Error al obtener la tarea", Toast.LENGTH_SHORT).show()
@@ -146,13 +152,85 @@ class TaskInfo : AppCompatActivity() {
                                 }
 
                             } else {
+                                btnAsignaMiembro.isEnabled = false
                                 // Si no tiene permiso para editar ni eliminar
                                 btnEditarTarea.isEnabled = false
                                 btnEliminar.isEnabled = false
+
                             }
                         }
                     }
             }
+
+
+        btnAsignaMiembro.setOnClickListener {
+            val hogarId = Sesion.hogarId
+            val taskId = intent.getStringExtra("id") ?: ""
+
+            // Paso 1: Obtener la tarea
+            db.collection("hogares")
+                .document(hogarId)
+                .collection("tareas")
+                .document(taskId)
+                .get()
+                .addOnSuccessListener { tareaSnapshot ->
+                    val miembrosAsignados = tareaSnapshot.get("miembros") as? List<String> ?: emptyList()
+
+                    // Paso 2: Obtener TODOS los miembros del hogar (el campo mapa, no colección)
+                    db.collection("hogares")
+                        .document(hogarId)
+                        .get()
+                        .addOnSuccessListener { hogarSnapshot ->
+                            val miembrosMap = hogarSnapshot.get("miembros") as? Map<String, Boolean> ?: emptyMap()
+
+                            val miembrosDisponibles = miembrosMap.keys
+                                .filter { uid -> uid !in miembrosAsignados }
+                                .map { uid -> uid to uid } // puedes luego cambiar para traer nombre si quieres
+
+                            if (miembrosDisponibles.isEmpty()) {
+                                Toast.makeText(this, "Todos los miembros ya están asignados.", Toast.LENGTH_SHORT).show()
+                                return@addOnSuccessListener
+                            }
+
+                            val nombres = miembrosDisponibles.map { it.second }.toTypedArray()
+
+                            AlertDialog.Builder(this)
+                                .setTitle("Asignar miembro")
+                                .setItems(nombres) { _, which ->
+                                    val miembroSeleccionadoId = miembrosDisponibles[which].first
+
+                                    // Paso 3: Actualizar el array de miembros en la tarea
+                                    db.collection("hogares")
+                                        .document(hogarId)
+                                        .collection("tareas")
+                                        .document(taskId)
+                                        .update("miembros", FieldValue.arrayUnion(miembroSeleccionadoId))
+                                        .addOnSuccessListener {
+                                            Toast.makeText(this, "Miembro asignado correctamente.", Toast.LENGTH_SHORT).show()
+                                            val intent = Intent(this, MainMenu::class.java)
+                                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Esto asegura que la actividad principal se refresque
+                                            startActivity(intent)
+                                        }
+                                        .addOnFailureListener {
+                                            Toast.makeText(this, "Error al asignar miembro.", Toast.LENGTH_SHORT).show()
+                                        }
+                                }
+                                .setNegativeButton("Cancelar", null)
+                                .show()
+                        }
+                }
+
+
+
+
+
+
+    }
+
+
+
+
+
 
 
         // Botón de volver

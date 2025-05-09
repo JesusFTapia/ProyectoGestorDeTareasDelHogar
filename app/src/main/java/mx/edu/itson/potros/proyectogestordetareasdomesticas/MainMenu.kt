@@ -25,6 +25,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -96,8 +100,77 @@ class MainMenu : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val btnSalirHogar = findViewById<Button>(R.id.btn_salir)
+        // Llamamos a la función para verificar si el usuario es el creador
+        GlobalScope.launch(Dispatchers.Main) {
+            val esCreador = verificarPermisoEdicion()
+
+            // Si el usuario no es el creador, mostramos el botón
+            if (!esCreador) {
+                btnSalirHogar.visibility = View.VISIBLE
+            } else {
+                // Si el usuario es el creador, ocultamos el botón
+                btnSalirHogar.visibility = View.GONE
+            }
+        }
+
+
+        btnSalirHogar.setOnClickListener {
+            desvincularUsuarioDelHogar { success ->
+                if (success) {
+                    val intent = Intent(this, HomeSelection::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this, "Error al salir del hogar", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
 
     }
+    private fun salirDelHogar() {
+        desvincularUsuarioDelHogar { success ->
+            if (success) {
+                val intent = Intent(this, HomeSelection::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+            } else {
+                Toast.makeText(this, "Error al salir del hogar", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    private fun desvincularUsuarioDelHogar(callback: (Boolean) -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (currentUserUid == null) {
+            callback(false)
+            return
+        }
+
+        val hogarId = Sesion.hogarId // O dinámicamente si lo tienes
+        val hogarRef = db.collection("hogares").document(hogarId)
+
+        val updates = hashMapOf<String, Any>(
+            "miembros.$currentUserUid" to FieldValue.delete()
+        )
+
+        hogarRef.update(updates)
+            .addOnSuccessListener {
+                Log.d("SALIR_HOGAR", "Usuario desvinculado exitosamente")
+                callback(true)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("SALIR_HOGAR", "Error al desvincular: ${exception.message}")
+                callback(false)
+            }
+    }
+
+
+
+
     fun cargarTasks() {
         val db = Firebase.firestore
 

@@ -19,7 +19,6 @@ class SignIn : AppCompatActivity() {
         val btnVolver: Button = findViewById(R.id.btn_volver)
         val btnIrARegistro: Button = findViewById(R.id.btn_irARegistro)
 
-        // 👉 Estos listeners DEBEN estar fuera del login
         btnVolver.setOnClickListener {
             finish()
         }
@@ -47,58 +46,42 @@ class SignIn : AppCompatActivity() {
                         Sesion.uid = uid
                         Sesion.usuarioActual = user.email ?: ""
 
-                        db.collection("usuarios").document(uid).get()
-                            .addOnSuccessListener { doc ->
-                                if (doc.exists()) {
-                                    val hogares = doc.get("hogares") as? List<*>
-                                    if (!hogares.isNullOrEmpty()) {
-                                        val primerHogar = hogares[0].toString()
-                                        val hogarRef = db.collection("hogares").document(primerHogar)
+                        // 🔥 Cambiamos aquí: Buscar hogar donde el UID esté activo en miembros
+                        db.collection("hogares")
+                            .whereEqualTo("miembros.$uid", true)
+                            .limit(1)
+                            .get()
+                            .addOnSuccessListener { querySnapshot ->
+                                if (!querySnapshot.isEmpty) {
+                                    val hogarDoc = querySnapshot.documents[0]
+                                    Sesion.hogarId = hogarDoc.id
+                                    Sesion.esCreador = false
+                                    Sesion.puedeEditar = hogarDoc.getBoolean("permiteEdicion") ?: true
 
-                                        hogarRef.get().addOnSuccessListener { hogarDoc ->
-                                            if (hogarDoc.exists()) {
-                                                Sesion.hogarId = primerHogar
-                                                Sesion.esCreador = false
-                                                Sesion.puedeEditar = hogarDoc.getBoolean("permiteEdicion") ?: true
-
-                                                Toast.makeText(this, "Bienvenido de nuevo", Toast.LENGTH_SHORT).show()
-                                                val intent = Intent(this, MainMenu::class.java)
-                                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                                startActivity(intent)
-                                                finish()
-
-                                            } else {
-                                                // El hogar ya no existe → quitar del usuario
-                                                val nuevosHogares = hogares.filter { it.toString() != primerHogar }
-                                                db.collection("usuarios").document(uid)
-                                                    .update("hogares", nuevosHogares)
-                                                    .addOnSuccessListener {
-                                                        val intent = Intent(this, HomeSelection::class.java)
-                                                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                                        startActivity(intent)
-                                                        finish()
-
-                                                    }
-                                            }
-                                        }
-                                    } else {
-                                        // No tiene hogares
-                                        Toast.makeText(this, "No estás en ningún hogar, crea o únete a uno.", Toast.LENGTH_LONG).show()
-                                        startActivity(Intent(this, HomeSelection::class.java))
-                                    }
+                                    Toast.makeText(this, "Bienvenido de nuevo", Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(this, MainMenu::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    startActivity(intent)
+                                    finish()
                                 } else {
-                                    Toast.makeText(this, "Usuario no encontrado en Firestore", Toast.LENGTH_SHORT).show()
+                                    // No pertenece a ningún hogar
+                                    Toast.makeText(this, "No estás en ningún hogar, crea o únete a uno.", Toast.LENGTH_LONG).show()
+                                    val intent = Intent(this, HomeSelection::class.java)
+                                    startActivity(intent)
+                                    finish()
                                 }
                             }
                             .addOnFailureListener {
-                                Toast.makeText(this, "Error al verificar hogares", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "Error al buscar hogar", Toast.LENGTH_SHORT).show()
                             }
                     } else {
-                        // 👉 Aquí capturamos login fallido
                         Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                     }
                 }
         }
     }
 }
+
+
+
 
