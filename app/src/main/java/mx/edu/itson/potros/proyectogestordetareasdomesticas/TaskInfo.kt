@@ -37,6 +37,7 @@ class TaskInfo : AppCompatActivity() {
         db.collection("hogares").document(Sesion.hogarId).get()
             .addOnSuccessListener { hogarDoc ->
                 val creador = hogarDoc.getString("creador") ?: ""
+                val permiteEdicion = hogarDoc.getBoolean("permiteEdicion") ?: false
 
                 db.collection("hogares")
                     .document(Sesion.hogarId)
@@ -46,39 +47,49 @@ class TaskInfo : AppCompatActivity() {
                     .addOnSuccessListener { document ->
                         if (document.exists()) {
                             val miembros = document.get("miembros") as? List<*> ?: emptyList<String>()
+                            val tareaEstado = document.getString("estado") ?: ""
                             val puedeCompletar = miembros.contains(Sesion.uid) || Sesion.uid == creador
                             val esCreador = Sesion.uid == creador
 
-                            // Validar completado
-                            btnCompletar.isEnabled = puedeCompletar
-                            if (puedeCompletar) {
-                                btnCompletar.setOnClickListener {
-                                    tv_taskstate.text = "Completada"
-                                    db.collection("hogares")
-                                        .document(Sesion.hogarId)
-                                        .collection("tareas")
-                                        .document(taskId)
-                                        .update("estado", "completada")
-                                        .addOnSuccessListener {
-                                            Toast.makeText(this, "Tarea completada", Toast.LENGTH_SHORT).show()
-
-                                            // Volver al MainMenu
-                                            val intent = Intent(this, MainMenu::class.java) // Asegúrate de tener MainMenu Activity
-                                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Esto asegura que la actividad principal se refresque
-                                            startActivity(intent)
-                                            finish() // Cerrar la actividad actual
-                                        }
-                                        .addOnFailureListener {
-                                            Toast.makeText(this, "Error al actualizar Firebase", Toast.LENGTH_SHORT).show()
-                                        }
-                                }
-
+                            // Verificar si la tarea ya está completada
+                            if (tareaEstado == "Completada") {
+                                btnCompletar.isEnabled = false // Deshabilitar el botón de completar
+                                tv_taskstate.text = "Completada" // Cambiar el estado visible
                             } else {
-                                Toast.makeText(this, "No tienes permiso para completar esta tarea", Toast.LENGTH_SHORT).show()
+                                // Si no está completada, permitir marcarla como completada
+                                btnCompletar.isEnabled = puedeCompletar
+                                if (puedeCompletar) {
+                                    btnCompletar.setOnClickListener {
+                                        tv_taskstate.text = "Completada"
+                                        db.collection("hogares")
+                                            .document(Sesion.hogarId)
+                                            .collection("tareas")
+                                            .document(taskId)
+                                            .update("estado", "Completada")
+                                            .addOnSuccessListener {
+                                                Toast.makeText(this, "Tarea completada", Toast.LENGTH_SHORT).show()
+
+                                                // Volver al MainMenu
+                                                val intent = Intent(this, MainMenu::class.java)
+                                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Esto asegura que la actividad principal se refresque
+                                                startActivity(intent)
+                                                finish() // Cerrar la actividad actual
+                                            }
+                                            .addOnFailureListener {
+                                                Toast.makeText(this, "Error al actualizar Firebase", Toast.LENGTH_SHORT).show()
+                                            }
+                                    }
+                                } else {
+                                    Toast.makeText(this, "No tienes permiso para completar esta tarea", Toast.LENGTH_SHORT).show()
+                                }
                             }
 
-                            // Validar edición
-                            if (esCreador) {
+                            // Validar edición y eliminación
+                            if (permiteEdicion || esCreador) {
+                                // Si permite edición o es el creador
+                                btnEditarMiembros.isEnabled = true
+                                btnEliminar.isEnabled = true
+
                                 btnEditarMiembros.setOnClickListener {
                                     db.collection("hogares")
                                         .document(Sesion.hogarId)
@@ -139,8 +150,8 @@ class TaskInfo : AppCompatActivity() {
                                         .show()
                                 }
 
-
                             } else {
+                                // Si no tiene permiso para editar ni eliminar
                                 btnEditarMiembros.isEnabled = false
                                 btnEliminar.isEnabled = false
                             }
@@ -154,3 +165,5 @@ class TaskInfo : AppCompatActivity() {
         }
     }
 }
+
+

@@ -19,11 +19,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 
 class MainMenu : AppCompatActivity() {
@@ -43,26 +46,34 @@ class MainMenu : AppCompatActivity() {
 
 
         btn_configurarHogar.setOnClickListener {
-            verificarPermisoEdicion { puedeEditar ->
-                if (puedeEditar) {
-                    val intent = Intent(this, EditHome::class.java)
+            // Llamamos a la función suspensiva dentro de un CoroutineScope
+            lifecycleScope.launch {
+                val tienePermiso = verificarPermisoEdicion()
+
+                if (tienePermiso) {
+                    val intent = Intent(this@MainMenu, EditHome::class.java)
                     startActivity(intent)
                 } else {
-                    Toast.makeText(this, "No tienes permiso para editar el hogar", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainMenu, "No tienes permiso para editar el hogar", Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
         btn_anadirTareas.setOnClickListener {
-            verificarPermisoEdicion { puedeEditar ->
-                if (puedeEditar) {
-                    val intent = Intent(this, CreateTask::class.java)
+            // Llamamos a la función suspensiva dentro de un CoroutineScope
+            lifecycleScope.launch {
+                val tienePermiso = verificarPermisoEdicion()
+
+                if (tienePermiso) {
+                    val intent = Intent(this@MainMenu, CreateTask::class.java)
                     startActivity(intent)
                 } else {
-                    Toast.makeText(this, "Solo el creador del hogar puede agregar tareas", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainMenu, "Solo el creador del hogar puede agregar tareas", Toast.LENGTH_SHORT).show()
                 }
             }
         }
+
+
 
 
 
@@ -171,21 +182,40 @@ class MainMenu : AppCompatActivity() {
             .collection("tareas")
             .get()
             .addOnSuccessListener { result ->
-                val total = result.size()
-                val completadas = result.count {
-                    it.getString("estado")?.lowercase() == "completada"
+                val total: Int
+                val completadas: Int
+
+                // Si es admin, cuenta todas las tareas
+                if (Sesion.esCreador) {
+                    total = result.size()
+                    completadas = result.count {
+                        it.getString("estado")?.lowercase() == "completada"
+                    }
+                } else {
+                    // Si es un miembro, cuenta solo las tareas asignadas a él
+                    val tareasDelMiembro = result.filter {
+                        val miembrosList = it.get("miembros") as? List<String> ?: listOf()
+                        miembrosList.contains(Sesion.uid)
+                    }
+
+                    total = tareasDelMiembro.size
+                    completadas = tareasDelMiembro.count {
+                        it.getString("estado")?.lowercase() == "completada"
+                    }
                 }
 
+                // Actualizar la barra de progreso
                 if (total > 0) {
                     val porcentaje = (completadas * 100) / total
                     tvProgreso.text = "✅ $completadas de $total tareas completadas"
                     barraProgreso.progress = porcentaje
                 } else {
-                    tvProgreso.text = "No hay tareas registradas"
+                    tvProgreso.text = "No hay tareas asignadas"
                     barraProgreso.progress = 0
                 }
             }
     }
+
 
 
 
@@ -199,24 +229,22 @@ class MainMenu : AppCompatActivity() {
         findViewById<TextView>(R.id.tv_progreso).text = "Progreso: $progreso%"
     }
 
-    fun verificarPermisoEdicion(callback: (Boolean) -> Unit) {
+    suspend fun verificarPermisoEdicion(): Boolean {
         val db = Firebase.firestore
         val hogarRef = db.collection("hogares").document(Sesion.hogarId)
 
-        hogarRef.get().addOnSuccessListener { document ->
-            if (document != null && document.exists()) {
-                val creadorId = document.getString("creador")
-                val todosPuedenEditar = document.getBoolean("permiteEdicion") ?: false
-
-                val tienePermiso = (creadorId == Sesion.uid) || todosPuedenEditar
-                callback(tienePermiso)
-            } else {
-                callback(false)
-            }
-        }.addOnFailureListener {
-            callback(false)
+        return try {
+            val document = hogarRef.get().await() // Utilizamos `await()` para hacer la llamada sincrónica
+            document?.let {
+                val creadorId = it.getString("creador")
+                creadorId == Sesion.uid
+            } ?: false
+        } catch (e: Exception) {
+            false
         }
     }
+
+
 
 
 

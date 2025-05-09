@@ -32,6 +32,11 @@ class CreateTask : AppCompatActivity() {
             val dia = obtenerDiaSeleccionado()
 
             val seleccionados = mutableListOf<String>()
+
+            // El creador siempre tiene la tarea asignada
+            seleccionados.add(Sesion.uid)
+
+            // Agregar a otros miembros seleccionados
             for (i in 0 until listaMiembros.count) {
                 if (listaMiembros.isItemChecked(i)) {
                     seleccionados.add(miembrosUids[i])
@@ -71,6 +76,7 @@ class CreateTask : AppCompatActivity() {
                     Toast.makeText(this, "Error al crear la tarea", Toast.LENGTH_SHORT).show()
                 }
         }
+
     }
 
     private fun cargarMiembros() {
@@ -85,7 +91,10 @@ class CreateTask : AppCompatActivity() {
                 miembrosUids.clear()
 
                 mapa.keys.forEach { uid ->
-                    miembrosUids.add(uid.toString())
+                    // Solo añadir si no es el creador
+                    if (uid.toString() != Sesion.uid) {
+                        miembrosUids.add(uid.toString())
+                    }
                 }
 
                 db.collection("usuarios").get()
@@ -108,6 +117,7 @@ class CreateTask : AppCompatActivity() {
                     }
             }
     }
+
 
     private fun obtenerDiaSeleccionado(): String? {
         val dias1 = findViewById<RadioGroup>(R.id.rg_diasSemana1)
