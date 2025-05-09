@@ -9,8 +9,6 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-
-
         <!-- Icono -->
         <ImageView
             android:id="@+id/iv_imagen"
@@ -68,6 +66,7 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="22sp" />
 
+
         <TextView
             android:id="@+id/tv_taskstate"
             android:layout_width="match_parent"
@@ -76,6 +75,78 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
             android:layout_marginBottom="24dp" />
+        <TextView
+            android:id="@+id/tv_dayoftheweek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Día de la semana:"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="22sp" />
+        <RadioGroup
+            android:id="@+id/rg_diasSemanaTask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <RadioButton
+                android:id="@+id/rb_lunes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lun"
+                android:textSize="16sp"
+                android:layout_marginEnd="8dp"/>
+
+            <RadioButton
+                android:id="@+id/rb_martes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mar"
+                android:textSize="16sp"
+                android:layout_marginEnd="8dp"/>
+
+            <RadioButton
+                android:id="@+id/rb_miercoles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mié"
+                android:textSize="16sp"
+                android:layout_marginEnd="8dp"/>
+
+            <RadioButton
+                android:id="@+id/rb_jueves"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jue"
+                android:textSize="16sp"
+                android:layout_marginEnd="8dp"/>
+
+            <RadioButton
+                android:id="@+id/rb_viernes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vie"
+                android:textSize="16sp"
+                android:layout_marginEnd="8dp"/>
+
+            <RadioButton
+                android:id="@+id/rb_sabado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sáb"
+                android:textSize="16sp"
+                android:layout_marginEnd="8dp"/>
+
+            <RadioButton
+                android:id="@+id/rb_domingo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dom"
+                android:textSize="16sp"
+                android:layout_marginEnd="8dp"/>
+        </RadioGroup>
 
         <!-- Botones de acción -->
         <LinearLayout
@@ -84,7 +155,15 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_marginBottom="16dp">
-
+            <Button
+                android:id="@+id/btn_editarTarea"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Editar tarea"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@android:color/white" />
             <Button
                 android:id="@+id/btn_completarTarea"
                 android:layout_width="0dp"
@@ -95,14 +174,6 @@
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="@android:color/white" />
 
-            <Button
-                android:id="@+id/btn_editarMiembros"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Editar miembros"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@android:color/white" />
         </LinearLayout>
 
         <!-- Eliminar -->

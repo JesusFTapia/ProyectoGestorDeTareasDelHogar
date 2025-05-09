@@ -3,6 +3,7 @@ package mx.edu.itson.potros.proyectogestordetareasdomesticas
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.ktx.firestore
@@ -18,9 +19,10 @@ class TaskInfo : AppCompatActivity() {
         val tv_taskstate: TextView = findViewById(R.id.tv_taskstate)
 
         val btnCompletar: Button = findViewById(R.id.btn_completarTarea)
-        val btnEditarMiembros: Button = findViewById(R.id.btn_editarMiembros)
+        val btnEditarTarea: Button = findViewById(R.id.btn_editarTarea)
         val btnEliminar: Button = findViewById(R.id.btn_eliminarTarea)
         val btnVolver: Button = findViewById(R.id.btn_volver)
+        val rg_diasSemana: RadioGroup = findViewById(R.id.rg_diasSemanaTask)
 
         val taskId = intent.getStringExtra("id") ?: ""
         val db = Firebase.firestore
@@ -50,6 +52,11 @@ class TaskInfo : AppCompatActivity() {
                             val tareaEstado = document.getString("estado") ?: ""
                             val puedeCompletar = miembros.contains(Sesion.uid) || Sesion.uid == creador
                             val esCreador = Sesion.uid == creador
+                            
+                            rg_diasSemana.setEnabled(false)
+                            et_taskname.setEnabled(false)
+                            btnEditarTarea.visibility= View.INVISIBLE
+                            btnEliminar.visibility= View.INVISIBLE
 
                             // Verificar si la tarea ya está completada
                             if (tareaEstado == "Completada") {
@@ -87,10 +94,12 @@ class TaskInfo : AppCompatActivity() {
                             // Validar edición y eliminación
                             if (permiteEdicion || esCreador) {
                                 // Si permite edición o es el creador
-                                btnEditarMiembros.isEnabled = true
-                                btnEliminar.isEnabled = true
+                                rg_diasSemana.setEnabled(true)
+                                et_taskname.setEnabled(true)
+                                btnEditarTarea.visibility= View.VISIBLE
+                                btnEliminar.visibility= View.VISIBLE
 
-                                btnEditarMiembros.setOnClickListener {
+                                btnEditarTarea.setOnClickListener {
                                     db.collection("hogares")
                                         .document(Sesion.hogarId)
                                         .get()
@@ -152,7 +161,7 @@ class TaskInfo : AppCompatActivity() {
 
                             } else {
                                 // Si no tiene permiso para editar ni eliminar
-                                btnEditarMiembros.isEnabled = false
+                                btnEditarTarea.isEnabled = false
                                 btnEliminar.isEnabled = false
                             }
                         }

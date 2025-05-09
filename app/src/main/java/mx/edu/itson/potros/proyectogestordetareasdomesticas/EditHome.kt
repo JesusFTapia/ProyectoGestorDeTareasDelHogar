@@ -49,6 +49,7 @@ class EditHome : AppCompatActivity() {
             val rbSoloCreador = findViewById<RadioButton>(R.id.rb_editarSoloCreador)
             val switchNotif = findViewById<Switch>(R.id.switch_notificacionesEditar)
             val tv_codigoDelHogar = findViewById<TextView>(R.id.tv_codigoDelHogar)
+            tv_codigoDelHogar.setText(Sesion.hogarId)
 
             etNombre.setText(doc.getString("nombre") ?: "")
 
