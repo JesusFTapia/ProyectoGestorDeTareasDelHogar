@@ -62,15 +62,22 @@ class SignIn : AppCompatActivity() {
                                                 Sesion.puedeEditar = hogarDoc.getBoolean("permiteEdicion") ?: true
 
                                                 Toast.makeText(this, "Bienvenido de nuevo", Toast.LENGTH_SHORT).show()
-                                                startActivity(Intent(this, MainMenu::class.java))
+                                                val intent = Intent(this, MainMenu::class.java)
+                                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                startActivity(intent)
+                                                finish()
+
                                             } else {
                                                 // El hogar ya no existe → quitar del usuario
                                                 val nuevosHogares = hogares.filter { it.toString() != primerHogar }
                                                 db.collection("usuarios").document(uid)
                                                     .update("hogares", nuevosHogares)
                                                     .addOnSuccessListener {
-                                                        Toast.makeText(this, "Tu hogar ya no existe, únete a uno nuevo", Toast.LENGTH_LONG).show()
-                                                        startActivity(Intent(this, HomeSelection::class.java))
+                                                        val intent = Intent(this, HomeSelection::class.java)
+                                                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                        startActivity(intent)
+                                                        finish()
+
                                                     }
                                             }
                                         }

@@ -19,7 +19,6 @@
         android:layout_margin="16dp"
         app:tint="@color/black" />
 
-
     <!-- Título -->
     <TextView
         android:id="@+id/tv_titulo"
@@ -35,7 +34,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginHorizontal="16dp"/>
 
-    <!-- Progreso -->
+    <!-- Barra de Progreso -->
     <ProgressBar
         android:id="@+id/progresoTareas"
         style="?android:attr/progressBarStyleHorizontal"
@@ -63,7 +62,6 @@
         android:layout_marginTop="4dp"
         android:layout_marginStart="16dp"/>
 
-
     <!-- Lista de tareas -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/task_list"
@@ -78,23 +76,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-
-    <!-- Botón flotante para agregar tarea -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <!-- Botón para añadir tareas -->
+    <Button
         android:id="@+id/btn_anadirTareas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Agregar tarea"
-        android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="@color/colorPrimary"
-        app:tint="@android:color/white"
+        android:text="+"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@id/btn_cerrarSesion"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="12dp"
-        android:layout_marginEnd="16dp"/>
+        android:layout_marginEnd="16dp" />
 
-
-
+    <!-- Botón de cerrar sesión -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_cerrarSesion"
         android:layout_width="0dp"
@@ -109,8 +104,5 @@
         android:layout_marginBottom="20dp"
         android:elevation="6dp"
         android:backgroundTint="@android:color/white"/>
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+

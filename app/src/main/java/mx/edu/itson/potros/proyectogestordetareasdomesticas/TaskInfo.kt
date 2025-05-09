@@ -61,11 +61,18 @@ class TaskInfo : AppCompatActivity() {
                                         .update("estado", "completada")
                                         .addOnSuccessListener {
                                             Toast.makeText(this, "Tarea completada", Toast.LENGTH_SHORT).show()
+
+                                            // Volver al MainMenu
+                                            val intent = Intent(this, MainMenu::class.java) // Asegúrate de tener MainMenu Activity
+                                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Esto asegura que la actividad principal se refresque
+                                            startActivity(intent)
+                                            finish() // Cerrar la actividad actual
                                         }
                                         .addOnFailureListener {
                                             Toast.makeText(this, "Error al actualizar Firebase", Toast.LENGTH_SHORT).show()
                                         }
                                 }
+
                             } else {
                                 Toast.makeText(this, "No tienes permiso para completar esta tarea", Toast.LENGTH_SHORT).show()
                             }
@@ -117,12 +124,21 @@ class TaskInfo : AppCompatActivity() {
                                                 .delete()
                                                 .addOnSuccessListener {
                                                     Toast.makeText(this, "Tarea eliminada", Toast.LENGTH_SHORT).show()
-                                                    finish()
+
+                                                    // Volver al MainMenu y actualizar las tareas
+                                                    val intent = Intent(this, MainMenu::class.java)
+                                                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Esto asegura que la actividad principal se refresque
+                                                    startActivity(intent)
+                                                    finish() // Cerrar la actividad actual
+                                                }
+                                                .addOnFailureListener {
+                                                    Toast.makeText(this, "Error al eliminar la tarea", Toast.LENGTH_SHORT).show()
                                                 }
                                         }
                                         .setNegativeButton("Cancelar", null)
                                         .show()
                                 }
+
 
                             } else {
                                 btnEditarMiembros.isEnabled = false

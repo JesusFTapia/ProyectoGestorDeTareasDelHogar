@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "531558711164",
+    "project_id": "proyecto-final-a6c98",
+    "storage_bucket": "proyecto-final-a6c98.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531558711164:android:2144e4dcbc818a638deef9",
+        "android_client_info": {
+          "package_name": "mx.edu.itson.potros.proyectogestordetareasdomesticas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9h0xi242Rxa34G0JshzoNE2GrmUjnoIw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

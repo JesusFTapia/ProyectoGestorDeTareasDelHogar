@@ -38,6 +38,7 @@ class EditHome : AppCompatActivity() {
                     findViewById<RadioButton>(R.id.rb_editarSoloCreador).isEnabled = false
                     findViewById<Switch>(R.id.switch_notificacionesEditar).isEnabled = false
                     findViewById<Button>(R.id.btn_editarHogar).isEnabled = false
+                    findViewById<Button>(R.id.btn_eliminarHogar).isEnabled = false
 
                     Toast.makeText(this, "Solo el creador puede editar el hogar", Toast.LENGTH_LONG).show()
                 }
