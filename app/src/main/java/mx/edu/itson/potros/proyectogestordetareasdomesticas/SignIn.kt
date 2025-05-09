@@ -15,9 +15,20 @@ class SignIn : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
-        val btn_inicioSesion: Button = findViewById(R.id.btn_inicioSesion)
+        val btnInicioSesion: Button = findViewById(R.id.btn_inicioSesion)
+        val btnVolver: Button = findViewById(R.id.btn_volver)
+        val btnIrARegistro: Button = findViewById(R.id.btn_irARegistro)
 
-        btn_inicioSesion.setOnClickListener {
+        // 👉 Estos listeners DEBEN estar fuera del login
+        btnVolver.setOnClickListener {
+            finish()
+        }
+
+        btnIrARegistro.setOnClickListener {
+            startActivity(Intent(this, Register::class.java))
+        }
+
+        btnInicioSesion.setOnClickListener {
             val email = findViewById<EditText>(R.id.et_email).text.toString().trim()
             val pass = findViewById<EditText>(R.id.et_password).text.toString().trim()
 
@@ -25,15 +36,6 @@ class SignIn : AppCompatActivity() {
                 Toast.makeText(this, "Llena los campos", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-
-            findViewById<Button>(R.id.btn_volver).setOnClickListener {
-                finish()
-            }
-
-            findViewById<Button>(R.id.btn_irARegistro).setOnClickListener {
-                startActivity(Intent(this, Register::class.java))
-            }
-
 
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, pass)
                 .addOnCompleteListener { task ->
@@ -62,7 +64,7 @@ class SignIn : AppCompatActivity() {
                                                 Toast.makeText(this, "Bienvenido de nuevo", Toast.LENGTH_SHORT).show()
                                                 startActivity(Intent(this, MainMenu::class.java))
                                             } else {
-                                                // El hogar ya no existe → lo quitamos del usuario
+                                                // El hogar ya no existe → quitar del usuario
                                                 val nuevosHogares = hogares.filter { it.toString() != primerHogar }
                                                 db.collection("usuarios").document(uid)
                                                     .update("hogares", nuevosHogares)
@@ -72,8 +74,11 @@ class SignIn : AppCompatActivity() {
                                                     }
                                             }
                                         }
+                                    } else {
+                                        // No tiene hogares
+                                        Toast.makeText(this, "No estás en ningún hogar, crea o únete a uno.", Toast.LENGTH_LONG).show()
+                                        startActivity(Intent(this, HomeSelection::class.java))
                                     }
-
                                 } else {
                                     Toast.makeText(this, "Usuario no encontrado en Firestore", Toast.LENGTH_SHORT).show()
                                 }
@@ -81,9 +86,12 @@ class SignIn : AppCompatActivity() {
                             .addOnFailureListener {
                                 Toast.makeText(this, "Error al verificar hogares", Toast.LENGTH_SHORT).show()
                             }
+                    } else {
+                        // 👉 Aquí capturamos login fallido
+                        Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                     }
-
                 }
         }
     }
 }
+
