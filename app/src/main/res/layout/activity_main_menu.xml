@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackground">
 
+
+
+
     <!-- Botón de configuración -->
     <ImageButton
         android:id="@+id/btn_configurarHogar"

@@ -120,11 +120,12 @@ class CreateTask : AppCompatActivity() {
 
 
     private fun obtenerDiaSeleccionado(): String? {
-        val dias1 = findViewById<RadioGroup>(R.id.rg_diasSemana1)
-        val dias2 = findViewById<RadioGroup>(R.id.rg_diasSemana2)
-        val idSeleccionado = dias1.checkedRadioButtonId.takeIf { it != -1 } ?: dias2.checkedRadioButtonId
+        val dias = findViewById<RadioGroup>(R.id.rg_diasSemana)
+        val idSeleccionado = dias.checkedRadioButtonId
         return if (idSeleccionado != -1) {
             findViewById<RadioButton>(idSeleccionado).text.toString()
-        } else null
+        } else {
+            null
+        }
     }
 }

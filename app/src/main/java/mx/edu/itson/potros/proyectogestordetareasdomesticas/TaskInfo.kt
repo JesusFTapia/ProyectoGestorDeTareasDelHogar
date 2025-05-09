@@ -13,7 +13,7 @@ class TaskInfo : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_info)
 
-        val tv_taskname: TextView = findViewById(R.id.tv_taskname)
+        val et_taskname: EditText = findViewById(R.id.et_taskname)
         val tv_taskmembers: TextView = findViewById(R.id.tv_taskmembers)
         val tv_taskstate: TextView = findViewById(R.id.tv_taskstate)
 
@@ -28,7 +28,7 @@ class TaskInfo : AppCompatActivity() {
         // Mostrar nombre, miembros y estado
         val bundle = intent.extras
         if (bundle != null) {
-            tv_taskname.text = bundle.getString("nombre")
+            et_taskname.setText(bundle.getString("nombre") )
             tv_taskmembers.text = bundle.getString("miembros")
             tv_taskstate.text = bundle.getString("estado")
         }

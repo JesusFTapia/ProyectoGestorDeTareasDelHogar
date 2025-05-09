@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Switch
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -47,6 +48,7 @@ class EditHome : AppCompatActivity() {
             val rbTodos = findViewById<RadioButton>(R.id.rb_editarTodos)
             val rbSoloCreador = findViewById<RadioButton>(R.id.rb_editarSoloCreador)
             val switchNotif = findViewById<Switch>(R.id.switch_notificacionesEditar)
+            val tv_codigoDelHogar = findViewById<TextView>(R.id.tv_codigoDelHogar)
 
             etNombre.setText(doc.getString("nombre") ?: "")
 

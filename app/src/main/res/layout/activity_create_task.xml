@@ -77,10 +77,12 @@
         android:layout_marginBottom="16dp">
 
         <RadioGroup
-            android:id="@+id/rg_diasSemana1"
+            android:id="@+id/rg_diasSemana"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
 
             <RadioButton
                 android:id="@+id/rb_lunes"
@@ -88,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:text="Lun"
                 android:textSize="16sp"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginEnd="8dp"/>
 
             <RadioButton
                 android:id="@+id/rb_martes"
@@ -96,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:text="Mar"
                 android:textSize="16sp"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginEnd="8dp"/>
 
             <RadioButton
                 android:id="@+id/rb_miercoles"
@@ -104,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:text="Mié"
                 android:textSize="16sp"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginEnd="8dp"/>
 
             <RadioButton
                 android:id="@+id/rb_jueves"
@@ -112,15 +114,7 @@
                 android:layout_height="wrap_content"
                 android:text="Jue"
                 android:textSize="16sp"
-                android:layout_marginRight="8dp"/>
-        </RadioGroup>
-
-        <RadioGroup
-            android:id="@+id/rg_diasSemana2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+                android:layout_marginEnd="8dp"/>
 
             <RadioButton
                 android:id="@+id/rb_viernes"
@@ -128,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:text="Vie"
                 android:textSize="16sp"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginEnd="8dp"/>
 
             <RadioButton
                 android:id="@+id/rb_sabado"
@@ -136,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:text="Sáb"
                 android:textSize="16sp"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginEnd="8dp"/>
 
             <RadioButton
                 android:id="@+id/rb_domingo"
@@ -144,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:text="Dom"
                 android:textSize="16sp"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginEnd="8dp"/>
         </RadioGroup>
 
     </LinearLayout>

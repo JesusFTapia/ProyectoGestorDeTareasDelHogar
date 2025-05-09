@@ -30,8 +30,8 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="22sp" />
 
-        <TextView
-            android:id="@+id/tv_taskname"
+        <EditText
+            android:id="@+id/et_taskname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TaskName"
