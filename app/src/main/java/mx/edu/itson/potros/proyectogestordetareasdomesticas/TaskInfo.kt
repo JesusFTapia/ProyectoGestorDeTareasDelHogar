@@ -52,7 +52,7 @@ class TaskInfo : AppCompatActivity() {
                             val tareaEstado = document.getString("estado") ?: ""
                             val puedeCompletar = miembros.contains(Sesion.uid) || Sesion.uid == creador
                             val esCreador = Sesion.uid == creador
-                            
+                            seleccionarDia(rg_diasSemana,document.get("dia").toString())
                             rg_diasSemana.setEnabled(false)
                             et_taskname.setEnabled(false)
                             btnEditarTarea.visibility= View.INVISIBLE
@@ -102,33 +102,19 @@ class TaskInfo : AppCompatActivity() {
                                 btnEditarTarea.setOnClickListener {
                                     db.collection("hogares")
                                         .document(Sesion.hogarId)
-                                        .get()
-                                        .addOnSuccessListener { hogarDoc ->
-                                            val mapaMiembros = hogarDoc.get("miembros") as? Map<*, *> ?: emptyMap<String, Boolean>()
-                                            val miembrosUid = mapaMiembros.keys.map { it.toString() }
-
-                                            val seleccionados = mutableListOf<String>()
-                                            val nombres = miembrosUid.toTypedArray()
-
-                                            AlertDialog.Builder(this)
-                                                .setTitle("Selecciona los miembros")
-                                                .setMultiChoiceItems(nombres, null) { _, which, isChecked ->
-                                                    if (isChecked) seleccionados.add(nombres[which])
-                                                    else seleccionados.remove(nombres[which])
-                                                }
-                                                .setPositiveButton("Guardar") { _, _ ->
-                                                    db.collection("hogares")
-                                                        .document(Sesion.hogarId)
-                                                        .collection("tareas")
-                                                        .document(taskId)
-                                                        .update("miembros", seleccionados)
-                                                        .addOnSuccessListener {
-                                                            Toast.makeText(this, "Miembros actualizados", Toast.LENGTH_SHORT).show()
-                                                            finish()
-                                                        }
-                                                }
-                                                .setNegativeButton("Cancelar", null)
-                                                .show()
+                                        .collection("tareas")
+                                        .document(taskId)
+                                        .update(
+                                            mapOf(
+                                                "nombre" to et_taskname.text.toString(),
+                                                "dia" to obtenerDiaSeleccionado(rg_diasSemana)
+                                            )
+                                        )
+                                        .addOnSuccessListener {
+                                                Toast.makeText(this, "Tarea actualizada", Toast.LENGTH_SHORT).show()
+                                        }
+                                        .addOnFailureListener {
+                                            Toast.makeText(this, "Error al obtener la tarea", Toast.LENGTH_SHORT).show()
                                         }
                                 }
 
@@ -168,10 +154,30 @@ class TaskInfo : AppCompatActivity() {
                     }
             }
 
+
         // Botón de volver
         btnVolver.setOnClickListener {
             finish()
         }
+    }
+    fun seleccionarDia(radioGroup: RadioGroup, dia: String) {
+        for (i in 0 until radioGroup.childCount) {
+            val radioButton = radioGroup.getChildAt(i) as? RadioButton
+            if (radioButton?.text.toString().equals(dia, ignoreCase = true)) {
+                if (radioButton != null) {
+                    radioButton.isChecked = true
+                }
+                break
+            }
+        }
+    }
+    fun obtenerDiaSeleccionado(radioGroup: RadioGroup): String? {
+        val selectedId = radioGroup.checkedRadioButtonId
+        if (selectedId != -1) {
+            val radioButton = radioGroup.findViewById<RadioButton>(selectedId)
+            return radioButton.text.toString()
+        }
+        return null // Ningún botón seleccionado
     }
 }
 
