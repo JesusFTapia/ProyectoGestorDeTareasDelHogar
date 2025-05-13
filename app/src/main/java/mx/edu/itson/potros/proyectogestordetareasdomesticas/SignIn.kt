@@ -75,7 +75,7 @@ class SignIn : AppCompatActivity() {
                                 Toast.makeText(this, "Error al buscar hogar", Toast.LENGTH_SHORT).show()
                             }
                     } else {
-                        Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "Error: Usuario o Password incorrectas", Toast.LENGTH_LONG).show()
                     }
                 }
         }
