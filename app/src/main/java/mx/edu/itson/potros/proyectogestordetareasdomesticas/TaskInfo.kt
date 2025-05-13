@@ -29,15 +29,12 @@ class TaskInfo : AppCompatActivity() {
         val taskId = intent.getStringExtra("id") ?: ""
         val db = Firebase.firestore
 
-        // Mostrar nombre, miembros y estado
         val bundle = intent.extras
         if (bundle != null) {
-            et_taskname.setText(bundle.getString("nombre") )
-            tv_taskmembers.text = bundle.getString("miembros")
+            et_taskname.setText(bundle.getString("nombre"))
             tv_taskstate.text = bundle.getString("estado")
         }
 
-        // Obtener datos del hogar y de la tarea
         db.collection("hogares").document(Sesion.hogarId).get()
             .addOnSuccessListener { hogarDoc ->
                 val creador = hogarDoc.getString("creador") ?: ""
@@ -54,18 +51,37 @@ class TaskInfo : AppCompatActivity() {
                             val tareaEstado = document.getString("estado") ?: ""
                             val puedeCompletar = miembros.contains(Sesion.uid) || Sesion.uid == creador
                             val esCreador = Sesion.uid == creador
-                            seleccionarDia(rg_diasSemana,document.get("dia").toString())
-                            rg_diasSemana.setEnabled(false)
-                            et_taskname.setEnabled(false)
-                            btnEditarTarea.visibility= View.INVISIBLE
-                            btnEliminar.visibility= View.INVISIBLE
 
-                            // Verificar si la tarea ya está completada
+                            seleccionarDia(rg_diasSemana, document.get("dia").toString())
+                            rg_diasSemana.isEnabled = false
+                            et_taskname.isEnabled = false
+                            btnEditarTarea.visibility = View.INVISIBLE
+                            btnEliminar.visibility = View.INVISIBLE
+
+                            // 🔄 Mostrar nombres en lugar de UID
+                            val dbUsuarios = Firebase.firestore.collection("usuarios")
+                            val miembrosNombres = mutableListOf<String>()
+                            var procesados = 0
+
+                            for (uid in miembros) {
+                                dbUsuarios.document(uid.toString()).get()
+                                    .addOnSuccessListener { userDoc ->
+                                        val nombre = userDoc.getString("nombre") ?: uid.toString()
+                                        miembrosNombres.add(nombre)
+                                    }
+                                    .addOnCompleteListener {
+                                        procesados++
+                                        if (procesados == miembros.size) {
+                                            tv_taskmembers.text = miembrosNombres.joinToString(", ")
+                                        }
+                                    }
+                            }
+
+                            // Validar completado
                             if (tareaEstado == "Completada") {
-                                btnCompletar.isEnabled = false // Deshabilitar el botón de completar
-                                tv_taskstate.text = "Completada" // Cambiar el estado visible
+                                btnCompletar.isEnabled = false
+                                tv_taskstate.text = "Completada"
                             } else {
-                                // Si no está completada, permitir marcarla como completada
                                 btnCompletar.isEnabled = puedeCompletar
                                 if (puedeCompletar) {
                                     btnCompletar.setOnClickListener {
@@ -77,29 +93,23 @@ class TaskInfo : AppCompatActivity() {
                                             .update("estado", "Completada")
                                             .addOnSuccessListener {
                                                 Toast.makeText(this, "Tarea completada", Toast.LENGTH_SHORT).show()
-
-                                                // Volver al MainMenu
-                                                val intent = Intent(this, MainMenu::class.java)
-                                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Esto asegura que la actividad principal se refresque
-                                                startActivity(intent)
-                                                finish() // Cerrar la actividad actual
+                                                startActivity(Intent(this, MainMenu::class.java).apply {
+                                                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                                })
+                                                finish()
                                             }
                                             .addOnFailureListener {
                                                 Toast.makeText(this, "Error al actualizar Firebase", Toast.LENGTH_SHORT).show()
                                             }
                                     }
-                                } else {
-                                    Toast.makeText(this, "No tienes permiso para completar esta tarea", Toast.LENGTH_SHORT).show()
                                 }
                             }
 
-                            // Validar edición y eliminación
                             if (permiteEdicion || esCreador) {
-                                // Si permite edición o es el creador
-                                rg_diasSemana.setEnabled(true)
-                                et_taskname.setEnabled(true)
-                                btnEditarTarea.visibility= View.VISIBLE
-                                btnEliminar.visibility= View.VISIBLE
+                                rg_diasSemana.isEnabled = true
+                                et_taskname.isEnabled = true
+                                btnEditarTarea.visibility = View.VISIBLE
+                                btnEliminar.visibility = View.VISIBLE
                                 btnAsignaMiembro.visibility = View.VISIBLE
 
                                 btnEditarTarea.setOnClickListener {
@@ -114,13 +124,10 @@ class TaskInfo : AppCompatActivity() {
                                             )
                                         )
                                         .addOnSuccessListener {
-                                                Toast.makeText(this, "Tarea actualizada", Toast.LENGTH_SHORT).show()
-                                            val intent = Intent(this, MainMenu::class.java)
-                                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Esto asegura que la actividad principal se refresque
-                                            startActivity(intent)
-                                        }
-                                        .addOnFailureListener {
-                                            Toast.makeText(this, "Error al obtener la tarea", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(this, "Tarea actualizada", Toast.LENGTH_SHORT).show()
+                                            startActivity(Intent(this, MainMenu::class.java).apply {
+                                                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                            })
                                         }
                                 }
 
@@ -136,15 +143,10 @@ class TaskInfo : AppCompatActivity() {
                                                 .delete()
                                                 .addOnSuccessListener {
                                                     Toast.makeText(this, "Tarea eliminada", Toast.LENGTH_SHORT).show()
-
-                                                    // Volver al MainMenu y actualizar las tareas
-                                                    val intent = Intent(this, MainMenu::class.java)
-                                                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Esto asegura que la actividad principal se refresque
-                                                    startActivity(intent)
-                                                    finish() // Cerrar la actividad actual
-                                                }
-                                                .addOnFailureListener {
-                                                    Toast.makeText(this, "Error al eliminar la tarea", Toast.LENGTH_SHORT).show()
+                                                    startActivity(Intent(this, MainMenu::class.java).apply {
+                                                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                                    })
+                                                    finish()
                                                 }
                                         }
                                         .setNegativeButton("Cancelar", null)
@@ -153,110 +155,87 @@ class TaskInfo : AppCompatActivity() {
 
                             } else {
                                 btnAsignaMiembro.isEnabled = false
-                                // Si no tiene permiso para editar ni eliminar
                                 btnEditarTarea.isEnabled = false
                                 btnEliminar.isEnabled = false
-
                             }
                         }
                     }
             }
 
-
         btnAsignaMiembro.setOnClickListener {
             val hogarId = Sesion.hogarId
-            val taskId = intent.getStringExtra("id") ?: ""
-
-            // Paso 1: Obtener la tarea
-            db.collection("hogares")
-                .document(hogarId)
-                .collection("tareas")
-                .document(taskId)
-                .get()
+            db.collection("hogares").document(hogarId).collection("tareas").document(taskId).get()
                 .addOnSuccessListener { tareaSnapshot ->
                     val miembrosAsignados = tareaSnapshot.get("miembros") as? List<String> ?: emptyList()
 
-                    // Paso 2: Obtener TODOS los miembros del hogar (el campo mapa, no colección)
-                    db.collection("hogares")
-                        .document(hogarId)
-                        .get()
+                    db.collection("hogares").document(hogarId).get()
                         .addOnSuccessListener { hogarSnapshot ->
                             val miembrosMap = hogarSnapshot.get("miembros") as? Map<String, Boolean> ?: emptyMap()
 
-                            val miembrosDisponibles = miembrosMap.keys
-                                .filter { uid -> uid !in miembrosAsignados }
-                                .map { uid -> uid to uid } // puedes luego cambiar para traer nombre si quieres
+                            val disponibles = miembrosMap.keys.filter { it !in miembrosAsignados }
 
-                            if (miembrosDisponibles.isEmpty()) {
+                            if (disponibles.isEmpty()) {
                                 Toast.makeText(this, "Todos los miembros ya están asignados.", Toast.LENGTH_SHORT).show()
                                 return@addOnSuccessListener
                             }
 
-                            val nombres = miembrosDisponibles.map { it.second }.toTypedArray()
+                            val dbUsuarios = Firebase.firestore.collection("usuarios")
+                            val nombres = mutableListOf<String>()
+                            var completos = 0
 
-                            AlertDialog.Builder(this)
-                                .setTitle("Asignar miembro")
-                                .setItems(nombres) { _, which ->
-                                    val miembroSeleccionadoId = miembrosDisponibles[which].first
-
-                                    // Paso 3: Actualizar el array de miembros en la tarea
-                                    db.collection("hogares")
-                                        .document(hogarId)
-                                        .collection("tareas")
-                                        .document(taskId)
-                                        .update("miembros", FieldValue.arrayUnion(miembroSeleccionadoId))
-                                        .addOnSuccessListener {
-                                            Toast.makeText(this, "Miembro asignado correctamente.", Toast.LENGTH_SHORT).show()
-                                            val intent = Intent(this, MainMenu::class.java)
-                                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Esto asegura que la actividad principal se refresque
-                                            startActivity(intent)
+                            disponibles.forEach { uid ->
+                                dbUsuarios.document(uid).get()
+                                    .addOnSuccessListener { userDoc ->
+                                        val nombre = userDoc.getString("nombre") ?: uid
+                                        nombres.add(nombre)
+                                    }
+                                    .addOnCompleteListener {
+                                        completos++
+                                        if (completos == disponibles.size) {
+                                            AlertDialog.Builder(this)
+                                                .setTitle("Asignar miembro")
+                                                .setItems(nombres.toTypedArray()) { _, which ->
+                                                    val uidSeleccionado = disponibles[which]
+                                                    db.collection("hogares")
+                                                        .document(hogarId)
+                                                        .collection("tareas")
+                                                        .document(taskId)
+                                                        .update("miembros", FieldValue.arrayUnion(uidSeleccionado))
+                                                        .addOnSuccessListener {
+                                                            Toast.makeText(this, "Miembro asignado correctamente.", Toast.LENGTH_SHORT).show()
+                                                            startActivity(Intent(this, MainMenu::class.java).apply {
+                                                                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                                            })
+                                                        }
+                                                }
+                                                .setNegativeButton("Cancelar", null)
+                                                .show()
                                         }
-                                        .addOnFailureListener {
-                                            Toast.makeText(this, "Error al asignar miembro.", Toast.LENGTH_SHORT).show()
-                                        }
-                                }
-                                .setNegativeButton("Cancelar", null)
-                                .show()
+                                    }
+                            }
                         }
                 }
+        }
 
-
-
-
-
-
-    }
-
-
-
-
-
-
-
-        // Botón de volver
         btnVolver.setOnClickListener {
             finish()
         }
     }
+
     fun seleccionarDia(radioGroup: RadioGroup, dia: String) {
         for (i in 0 until radioGroup.childCount) {
             val radioButton = radioGroup.getChildAt(i) as? RadioButton
             if (radioButton?.text.toString().equals(dia, ignoreCase = true)) {
-                if (radioButton != null) {
-                    radioButton.isChecked = true
-                }
+                radioButton?.isChecked = true
                 break
             }
         }
     }
+
     fun obtenerDiaSeleccionado(radioGroup: RadioGroup): String? {
         val selectedId = radioGroup.checkedRadioButtonId
-        if (selectedId != -1) {
-            val radioButton = radioGroup.findViewById<RadioButton>(selectedId)
-            return radioButton.text.toString()
-        }
-        return null // Ningún botón seleccionado
+        return if (selectedId != -1) {
+            radioGroup.findViewById<RadioButton>(selectedId)?.text.toString()
+        } else null
     }
 }
-
-

@@ -208,14 +208,23 @@ class MainMenu : AppCompatActivity() {
         val db = Firebase.firestore
         val tareasRef = db.collection("hogares").document(hogarId).collection("tareas")
 
-        // Usar snapshot listener para actualizaciones en tiempo real
+        // Días en orden fijo
+        val diasOrdenados = listOf("Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom")
+        val tareasAgrupadas = linkedMapOf<String, MutableList<Task>>()
+        for (dia in diasOrdenados) {
+            tareasAgrupadas[dia] = mutableListOf()
+        }
+
         tareasRef.addSnapshotListener { result, e ->
             if (e != null) {
                 Toast.makeText(this, "Error al cargar tareas", Toast.LENGTH_SHORT).show()
                 return@addSnapshotListener
             }
 
-            val tareasAgrupadas = mutableMapOf<String, MutableList<Task>>()
+            // Limpiar antes de volver a llenar
+            for (dia in diasOrdenados) {
+                tareasAgrupadas[dia]?.clear()
+            }
 
             for (document in result!!) {
                 val nombre = document.getString("nombre") ?: "Sin nombre"
@@ -223,23 +232,23 @@ class MainMenu : AppCompatActivity() {
                 val dia = document.getString("dia") ?: "Sin día"
                 val miembrosList = document.get("miembros") as? List<String> ?: listOf()
 
+                // Mostrar solo si no hay miembros o si estoy asignado
                 if (miembrosList.isEmpty() || miembrosList.contains(Sesion.uid)) {
                     val miembrosStr = miembrosList.joinToString(", ")
                     val tarea = Task(id = document.id, nombre = nombre, miembros = miembrosStr, estado = estado)
 
-                    if (!tareasAgrupadas.containsKey(dia)) {
-                        tareasAgrupadas[dia] = mutableListOf()
+                    if (dia in tareasAgrupadas.keys) {
+                        tareasAgrupadas[dia]?.add(tarea)
                     }
-                    tareasAgrupadas[dia]?.add(tarea)
                 }
             }
 
-            // Actualizar el adaptador
             val recyclerView = findViewById<RecyclerView>(R.id.task_list)
             recyclerView.layoutManager = LinearLayoutManager(this)
             recyclerView.adapter = GroupedTaskAdapter(this, tareasAgrupadas)
         }
     }
+
 
 
 
